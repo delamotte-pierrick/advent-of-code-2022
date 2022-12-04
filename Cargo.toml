@@ -7,3 +7,5 @@ edition = "2021"
 
 [dependencies]
 array_tool = "1.0.3"
+range-ext = "0.1.3"
+regex = "1.7.0"
