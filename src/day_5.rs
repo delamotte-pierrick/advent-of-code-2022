@@ -69,8 +69,8 @@ pub(crate) fn day_5_2() {
         for instruction in &instructions[10..] {
             re.captures_iter(instruction).for_each(|cap| {
                 let quantity = cap[1].parse::<usize>().unwrap();
-                let from = cap[2].parse::<usize>().unwrap() - 1;
-                let to = cap[3].parse::<usize>().unwrap() - 1;
+                let from = cap[2].parse::<usize>().unwrap() - 1; //Remove 1 because the input is 1-indexed
+                let to = cap[3].parse::<usize>().unwrap() - 1; //Remove 1 because the input is 1-indexed
 
                 let from_tower = &mut towers[from];
                 let mut craned_boxes = from_tower.split_off(from_tower.len() - quantity);
