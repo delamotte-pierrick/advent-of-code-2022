@@ -2,10 +2,11 @@ use crate::utils::read_lines;
 
 pub(crate) fn day_5_1() {
     let mut result: Vec<char> = Vec::new();
+    let tower_length = 24;
 
-    if let Ok(lines) = read_lines("./data/input_5.txt") {
+    if let Ok(lines) = read_lines("./data/input_5_bis.txt") {
         let inputs = lines.map(|instruction| instruction.unwrap()).collect::<Vec<String>>();
-        let mut towers: Vec<Vec<char>> = parse_towers(inputs.clone());
+        let mut towers: Vec<Vec<char>> = parse_towers(inputs.clone(), tower_length);
 
         let re = regex::Regex::new(r"move (\d+) from (\d+) to (\d+)").unwrap();
         for instruction in &inputs[10..] {
@@ -30,10 +31,11 @@ pub(crate) fn day_5_1() {
 
 pub(crate) fn day_5_2() {
     let mut result: Vec<char> = Vec::new();
+    let tower_length = 24;
 
-    if let Ok(lines) = read_lines("./data/input_5.txt") {
+    if let Ok(lines) = read_lines("./data/input_5_bis.txt") {
         let inputs = lines.map(|instruction| instruction.unwrap()).collect::<Vec<String>>();
-        let mut towers: Vec<Vec<char>> = parse_towers(inputs.clone());
+        let mut towers: Vec<Vec<char>> = parse_towers(inputs.clone(), tower_length);
 
         let re = regex::Regex::new(r"move (\d+) from (\d+) to (\d+)").unwrap();
         for instruction in &inputs[10..] {
@@ -55,7 +57,7 @@ pub(crate) fn day_5_2() {
     println!("Crate on top of towers with simultaneous move: {}", result.iter().collect::<String>());
 }
 
-fn parse_towers(inputs: Vec<String>) -> Vec<Vec<char>> {
+fn parse_towers(inputs: Vec<String>, tower_length: usize) -> Vec<Vec<char>> {
     let mut towers: Vec<Vec<char>> = Vec::new();
     let re = regex::Regex::new(r"(\[([A-Z])]|\s{3})\s?").unwrap();
 
@@ -66,7 +68,7 @@ fn parse_towers(inputs: Vec<String>) -> Vec<Vec<char>> {
     });
 
     //Add boxes to towers
-    for input in &inputs[..=8] {
+    for input in &inputs[..=tower_length] {
         re.captures_iter(input).enumerate().for_each(|(index, cap)| {
             if &cap[1] != "   " {
                 towers[index].push(cap[2].chars().next().unwrap());
