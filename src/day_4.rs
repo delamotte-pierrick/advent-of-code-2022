@@ -39,8 +39,6 @@ pub(crate) fn day_4_2() {
             if ![Bellow, Above].contains(&inter) {
                 contained += 1;
             }
-
-            println!("{:?}", inter);
         }
     }
     println!("Number of overlapping assignment: {}", contained);
