@@ -4,26 +4,11 @@ pub(crate) fn day_5_1() {
     let mut result: Vec<char> = Vec::new();
 
     if let Ok(lines) = read_lines("./data/input_5.txt") {
-        //Manual parsing of the input
-        let mut towers: Vec<Vec<char>> = Vec::new();
-        towers.push(Vec::from(['N', 'V', 'C', 'S', ]));
-        towers.push(Vec::from(['S', 'N', 'H', 'J', 'M', 'Z', ]));
-        towers.push(Vec::from(['D', 'N', 'J', 'G', 'T', 'C', 'M', ]));
-        towers.push(Vec::from(['M', 'R', 'W', 'J', 'F', 'D', 'T', ]));
-        towers.push(Vec::from(['H', 'F', 'P', ]));
-        towers.push(Vec::from(['J', 'H', 'Z', 'T', 'C', ]));
-        towers.push(Vec::from(['Z', 'L', 'S', 'F', 'Q', 'R', 'P', 'D', ]));
-        towers.push(Vec::from(['W', 'P', 'F', 'D', 'H', 'L', 'S', 'C', ]));
-        towers.push(Vec::from(['Z', 'G', 'N', 'F', 'P', 'M', 'S', 'D', ]));
-
-        // Now reverse because we want to start from the bottom
-        for tower in towers.iter_mut() {
-            tower.reverse();
-        }
+        let inputs = lines.map(|instruction| instruction.unwrap()).collect::<Vec<String>>();
+        let mut towers: Vec<Vec<char>> = parse_towers(inputs.clone());
 
         let re = regex::Regex::new(r"move (\d+) from (\d+) to (\d+)").unwrap();
-        let instructions = lines.map(|instruction| instruction.unwrap()).collect::<Vec<String>>();
-        for instruction in &instructions[10..] {
+        for instruction in &inputs[10..] {
             re.captures_iter(instruction).for_each(|cap| {
                 let quantity = cap[1].parse::<usize>().unwrap();
                 let from = cap[2].parse::<usize>().unwrap() - 1;
@@ -47,26 +32,11 @@ pub(crate) fn day_5_2() {
     let mut result: Vec<char> = Vec::new();
 
     if let Ok(lines) = read_lines("./data/input_5.txt") {
-        //Manual parsing of the input
-        let mut towers: Vec<Vec<char>> = Vec::new();
-        towers.push(Vec::from(['N', 'V', 'C', 'S', ]));
-        towers.push(Vec::from(['S', 'N', 'H', 'J', 'M', 'Z', ]));
-        towers.push(Vec::from(['D', 'N', 'J', 'G', 'T', 'C', 'M', ]));
-        towers.push(Vec::from(['M', 'R', 'W', 'J', 'F', 'D', 'T', ]));
-        towers.push(Vec::from(['H', 'F', 'P', ]));
-        towers.push(Vec::from(['J', 'H', 'Z', 'T', 'C', ]));
-        towers.push(Vec::from(['Z', 'L', 'S', 'F', 'Q', 'R', 'P', 'D', ]));
-        towers.push(Vec::from(['W', 'P', 'F', 'D', 'H', 'L', 'S', 'C', ]));
-        towers.push(Vec::from(['Z', 'G', 'N', 'F', 'P', 'M', 'S', 'D', ]));
-
-        // Now reverse because we want to start from the bottom (And because i'm to lazy)
-        for tower in towers.iter_mut() {
-            tower.reverse();
-        }
+        let inputs = lines.map(|instruction| instruction.unwrap()).collect::<Vec<String>>();
+        let mut towers: Vec<Vec<char>> = parse_towers(inputs.clone());
 
         let re = regex::Regex::new(r"move (\d+) from (\d+) to (\d+)").unwrap();
-        let instructions = lines.map(|instruction| instruction.unwrap()).collect::<Vec<String>>();
-        for instruction in &instructions[10..] {
+        for instruction in &inputs[10..] {
             re.captures_iter(instruction).for_each(|cap| {
                 let quantity = cap[1].parse::<usize>().unwrap();
                 let from = cap[2].parse::<usize>().unwrap() - 1; //Remove 1 because the input is 1-indexed
@@ -83,4 +53,28 @@ pub(crate) fn day_5_2() {
     }
 
     println!("Crate on top of towers with simultaneous move: {}", result.iter().collect::<String>());
+}
+
+fn parse_towers(inputs: Vec<String>) -> Vec<Vec<char>> {
+    let mut towers: Vec<Vec<char>> = Vec::new();
+    let re = regex::Regex::new(r"(\[([A-Z])]|\s{3})\s?").unwrap();
+
+    //Init towers
+    re.captures_iter(&inputs[0]).for_each(|_| {
+        let tower: Vec<char> = Vec::new();
+        towers.push(tower);
+    });
+
+    //Add boxes to towers
+    for input in &inputs[..=8] {
+        re.captures_iter(input).enumerate().for_each(|(index, cap)| {
+            if &cap[1] != "   " {
+                towers[index].push(cap[2].chars().next().unwrap());
+            }
+        });
+    }
+
+    towers.iter_mut().for_each(|tower| tower.reverse());
+
+    return towers;
 }
