@@ -1,5 +1,4 @@
 use crate::utils::read_lines;
-use array_tool::vec::Intersect;
 
 pub(crate) fn day_X_1() {
     if let Ok(lines) = read_lines("./data/input_X.txt") {

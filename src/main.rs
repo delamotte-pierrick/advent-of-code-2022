@@ -1,5 +1,3 @@
-#![feature(array_chunks)]
-
 // mod day_X;
 mod day_1;
 mod utils;
@@ -7,6 +5,7 @@ mod day_2;
 mod day_3;
 mod day_4;
 mod day_5;
+mod day_6;
 
 
 fn main() {
@@ -20,4 +19,6 @@ fn main() {
     day_4::day_4_2();
     day_5::day_5_1();
     day_5::day_5_2();
+    day_6::day_6_1();
+    day_6::day_6_2();
 }
