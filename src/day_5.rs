@@ -2,9 +2,9 @@ use crate::utils::read_lines;
 
 pub(crate) fn day_5_1() {
     let mut result: Vec<char> = Vec::new();
-    let tower_length = 24;
+    let tower_length = 8;
 
-    if let Ok(lines) = read_lines("./data/input_5_bis.txt") {
+    if let Ok(lines) = read_lines("./data/input_5.txt") {
         let inputs = lines.map(|instruction| instruction.unwrap()).collect::<Vec<String>>();
         let mut towers: Vec<Vec<char>> = parse_towers(inputs.clone(), tower_length);
 
@@ -31,9 +31,9 @@ pub(crate) fn day_5_1() {
 
 pub(crate) fn day_5_2() {
     let mut result: Vec<char> = Vec::new();
-    let tower_length = 24;
+    let tower_length = 8;
 
-    if let Ok(lines) = read_lines("./data/input_5_bis.txt") {
+    if let Ok(lines) = read_lines("./data/input_5.txt") {
         let inputs = lines.map(|instruction| instruction.unwrap()).collect::<Vec<String>>();
         let mut towers: Vec<Vec<char>> = parse_towers(inputs.clone(), tower_length);
 

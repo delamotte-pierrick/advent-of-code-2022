@@ -1,4 +1,3 @@
-use regex::Regex;
 use crate::utils::read_lines;
 
 pub(crate) fn day_7_1() {
@@ -32,16 +31,13 @@ pub(crate) fn day_7_2() {
 
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
 struct File {
-    name: String,
     size: i32,
     parent: String,
-    is_directory: bool,
 }
 
 fn parser(inputs: Vec<String>) -> Vec<File> {
     let mut files = Vec::new();
     let mut parents: Vec<String> = Vec::from(["racine".to_string()]);
-    let re = Regex::new(r"(\d+) ([a-z.]+)").unwrap();
 
     for command in &inputs[2..] {
         if command.starts_with("$ ls") {
@@ -53,19 +49,13 @@ fn parser(inputs: Vec<String>) -> Vec<File> {
             parents.push(dirname.clone());
         } else if command.starts_with("dir") {
             files.push(File {
-                name: command[4..].to_string(),
                 size: 0,
                 parent: parents.join("/"),
-                is_directory: true,
             });
         } else {
-            re.captures_iter(&command).for_each(|cap| {
-                files.push(File {
-                    name: cap[2].to_string(),
-                    size: cap[1].parse::<i32>().unwrap(),
-                    parent: parents.join("/"),
-                    is_directory: false,
-                });
+            files.push(File {
+                size: command.split(" ").collect::<Vec<&str>>()[0].parse::<i32>().unwrap(),
+                parent: parents.join("/"),
             });
         }
     }
