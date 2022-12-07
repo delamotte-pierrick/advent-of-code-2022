@@ -14,7 +14,6 @@ fn search_uniq_string(packet_length: usize) -> usize {
         let lines = lines.map(|x| x.unwrap()).collect::<Vec<String>>();
         let line = lines.first().unwrap();
 
-
         for index in 0..line.len() - packet_length {
             let slice = &line[index..index + packet_length].chars().collect::<Vec<char>>();
             let mut filtered = slice.clone();
