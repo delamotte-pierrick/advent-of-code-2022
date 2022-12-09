@@ -1,5 +1,5 @@
 use std::borrow::Borrow;
-use crate::utils::read_lines;
+use crate::utils::{create_matrices, read_lines};
 
 pub(crate) fn day_8_1() {
     if let Ok(lines) = read_lines("./data/input_8.txt") {
@@ -69,18 +69,6 @@ pub(crate) fn day_8_2() {
 
         println!("Number of visible tree: {}", visible_trees.iter().map(|x| x.iter().max().unwrap_or(&0)).max().unwrap_or(&0));
     }
-}
-
-fn create_matrices(x: i32, y: i32, value: i32) -> Vec<Vec<i32>> {
-    let mut matrix = Vec::new();
-    for _ in 0..y {
-        let mut row = Vec::new();
-        for _ in 0..x {
-            row.push(value);
-        }
-        matrix.push(row);
-    }
-    return matrix;
 }
 
 fn parse_inputs(inputs: Vec<String>) -> Vec<Vec<i32>> {
