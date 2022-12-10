@@ -13,6 +13,10 @@ mod day_10;
 
 
 fn main() {
+    let now = std::time::Instant::now();
+    let mut times = Vec::new();
+    times.push(now.elapsed());
+
     day_1::day_1_1();
     day_1::day_1_2();
     day_2::day_2_1();
@@ -33,4 +37,10 @@ fn main() {
     day_9::day_9_2();
     day_10::day_10_1();
     day_10::day_10_2();
+
+    // times.iter().enumerate().for_each(|(i, time)| {
+    //     println!("Day {}.1 took {:.2?}", i + 1, time);
+    // });
+
+    println!("Took {:.2?} to be ran", times.first().unwrap());
 }
