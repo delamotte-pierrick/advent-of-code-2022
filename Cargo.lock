@@ -7,6 +7,7 @@ name = "advent_of_code_2022"
 version = "0.1.0"
 dependencies = [
  "array_tool",
+ "evalexpr",
  "range-ext",
  "regex",
 ]
@@ -25,6 +26,12 @@ name = "array_tool"
 version = "1.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8f8cb5d814eb646a863c4f24978cff2880c4be96ad8cde2c0f0678732902e271"
+
+[[package]]
+name = "evalexpr"
+version = "8.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "aacfb566035f8cd02f6ec9247c242f3f9904a0b288ea383abcf4e95df6436a34"
 
 [[package]]
 name = "memchr"

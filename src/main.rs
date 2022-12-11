@@ -10,12 +10,12 @@ mod day_7;
 mod day_8;
 mod day_9;
 mod day_10;
+mod day_11;
 
 
 fn main() {
     let now = std::time::Instant::now();
     let mut times = Vec::new();
-    times.push(now.elapsed());
 
     day_1::day_1_1();
     day_1::day_1_2();
@@ -37,10 +37,10 @@ fn main() {
     day_9::day_9_2();
     day_10::day_10_1();
     day_10::day_10_2();
+    day_11::day_11_1();
+    day_11::day_11_2(); // This day takes a while to run
 
-    // times.iter().enumerate().for_each(|(i, time)| {
-    //     println!("Day {}.1 took {:.2?}", i + 1, time);
-    // });
+    times.push(now.elapsed());
 
     println!("Took {:.2?} to be ran", times.first().unwrap());
 }
