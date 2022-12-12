@@ -67,11 +67,11 @@ fn maze_to_graph(maze: Vec<Vec<char>>, is_from_end: bool) -> HashMap<String, Vec
                 graph.insert(cell_address.clone(), Vec::new());
             }
 
-            let cell_value = replace_char(maze[i as usize][j as usize]) as usize;
+            let cell_value = maze[i as usize][j as usize] as usize;
 
             [(i + 1, j, "↑"), (i - 1, j, "↓"), (i, j + 1, "←"), (i, j - 1, "→")].into_iter().for_each(|(x, y, direction)| {
                 if x >= 0 && x < maze.len() as i32 && y >= 0 && y < maze[0].len() as i32 {
-                    let neighbour_value = replace_char(maze[x as usize][y as usize]) as usize;
+                    let neighbour_value = maze[x as usize][y as usize] as usize;
 
                     let mut can_go_node = cell_value + 1 == neighbour_value || cell_value >= neighbour_value;
                     if is_from_end {
@@ -104,8 +104,10 @@ fn parse_input(file_path: &str, start_char: char, end_char: char) -> (Vec<Vec<ch
         (0..maze[i].len()).for_each(|j| {
             if maze[i][j] == start_char {
                 start = Some(format!("{},{}", i, j));
+                maze[i][j] = replace_char(maze[i][j]);
             } else if maze[i][j] == end_char {
                 end.push(format!("{},{}", i, j));
+                maze[i][j] = replace_char(maze[i][j]);
             }
         });
     });
