@@ -1,3 +1,5 @@
+extern crate core;
+
 // mod day_X;
 mod day_1;
 mod utils;
@@ -11,6 +13,7 @@ mod day_8;
 mod day_9;
 mod day_10;
 mod day_11;
+mod day_12;
 
 
 fn main() {
@@ -38,7 +41,8 @@ fn main() {
     day_10::day_10_1();
     day_10::day_10_2();
     day_11::day_11_1();
-    day_11::day_11_2(); // This day takes a while to run
+    // day_11::day_11_2(); // This day takes a while to run
+    day_12::day_12_1();
 
     times.push(now.elapsed());
 
