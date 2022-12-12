@@ -5,7 +5,7 @@ use crate::utils::read_lines;
 pub(crate) fn day_12_1() {
     let maze = parse_input("./data/input_12.txt");
     let mut start: Option<String> = None;
-    let mut end: Option<String> = None;
+    let mut end: Option<Vec<String>> = None;
 
     for (i, row) in maze.iter().enumerate() {
         if row.contains(&'S') {
@@ -19,7 +19,7 @@ pub(crate) fn day_12_1() {
         if row.contains(&'E') {
             for (j, cell) in row.iter().enumerate() {
                 if *cell == 'E' {
-                    end = Option::from(i.to_string() + "," + &j.to_string());
+                    end = Option::from(Vec::from([i.to_string() + "," + &j.to_string()]));
                 }
             }
         }
@@ -28,24 +28,54 @@ pub(crate) fn day_12_1() {
         panic!("No start or end found");
     }
 
-    let path = pathfinder_bfs(maze.clone(), start.clone().unwrap(), end.clone().unwrap());
+    let path = pathfinder_bfs(maze.clone(), start.clone().unwrap(), end.clone().unwrap(), false);
 
-    println!("Result: {}", path);
+    // visualize_maze(maze.clone(), path.clone());
+
     println!("Shortest path is: {} cell long", path.len());
 }
 
 pub(crate) fn day_12_2() {
-    println!("Result 2: {}", 0);
+    let maze = parse_input("./data/input_12.txt");
+    let mut start: Option<String> = None;
+    let mut end: Vec<String> = Vec::new();
+
+    for (i, row) in maze.iter().enumerate() {
+        if row.contains(&'E') {
+            for (j, cell) in row.iter().enumerate() {
+                if *cell == 'E' {
+                    start = Option::from(i.to_string() + "," + &j.to_string());
+                }
+            }
+        }
+
+        if row.contains(&'a') || row.contains(&'S') {
+            for (j, cell) in row.iter().enumerate() {
+                if ['S', 'a'].contains(cell) {
+                    end.push(i.to_string() + "," + &j.to_string());
+                }
+            }
+        }
+    }
+    if start.is_none() || end.len() == 0 {
+        panic!("No start or end found");
+    }
+
+    let path = pathfinder_bfs(maze.clone(), start.clone().unwrap(), end.clone(), true);
+
+    // visualize_maze(maze.clone(), path.clone());
+
+    println!("Shortest path to lowest elevation is: {} cell long", path.len());
 }
 
-fn pathfinder_bfs(maze: Vec<Vec<char>>, start: String, end: String) -> String {
-    let mut queue: VecDeque<(String, String)> = VecDeque::from([("".to_string(), start)]);
+fn pathfinder_bfs(maze: Vec<Vec<char>>, start: String, end: Vec<String>, is_from_end : bool) -> Vec<(String, String)> {
+    let mut queue: VecDeque<(Vec<(String, String)>, String)> = VecDeque::from([(Vec::new(), start.clone())]);
     let mut visited: Vec<String> = Vec::new();
-    let graph = maze_to_graph(maze.clone());
+    let graph = maze_to_graph(maze.clone(), is_from_end);
 
     while queue.len() > 0 {
         let (path, current) = queue.pop_back().unwrap();
-        if current == end {
+        if end.contains(&current) {
             return path;
         }
 
@@ -55,14 +85,17 @@ fn pathfinder_bfs(maze: Vec<Vec<char>>, start: String, end: String) -> String {
 
         visited.push(current.clone());
         for (direction, neighbour) in graph.get(&current).unwrap().iter() {
-            queue.push_front((path.clone() + direction, neighbour.clone()));
+            let mut new_path = path.clone();
+            new_path.push((direction.clone(), current.clone()));
+
+            queue.push_front((new_path, neighbour.clone()));
         }
     }
 
     panic!("No path found");
 }
 
-fn maze_to_graph(maze: Vec<Vec<char>>) -> HashMap<String, Vec<(String, String)>> {
+fn maze_to_graph(maze: Vec<Vec<char>>, is_from_end : bool) -> HashMap<String, Vec<(String, String)>> {
     let mut graph: HashMap<String, Vec<(String, String)>> = HashMap::new();
     let height = maze.len();
     let width = if height > 0 { maze[0].len() } else { 0 };
@@ -81,24 +114,30 @@ fn maze_to_graph(maze: Vec<Vec<char>>) -> HashMap<String, Vec<(String, String)>>
         for (j, cell) in row.iter().enumerate() {
             let cell_value = replace_char(*cell) as usize;
 
-            let cell_south = if i + 1 >= height { 0 as usize } else { replace_char(maze[i + 1][j]) as usize };
-            let cell_east = if j + 1 >= width { 0 as usize } else { replace_char(maze[i][j + 1]) as usize };
+            let i = i as i32;
+            let j = j as i32;
 
-            if [cell_value + 1, cell_value, cell_value - 1].contains(&cell_south) {
-                let cell_address = i.to_string() + "," + &j.to_string();
-                let cell_south_address = (i + 1).to_string() + "," + &j.to_string();
+            [(i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)].iter().for_each(|(x, y)| {
+                if *x >= 0 && *x < height as i32 && *y >= 0 && *y < width as i32 {
+                    let neighbour_value = replace_char(maze[*x as usize][*y as usize]) as usize;
+                    let cell_address = i.to_string() + "," + &j.to_string();
+                    let neighbour_address = x.to_string() + "," + &y.to_string();
 
-                graph.get_mut(&cell_address).unwrap().push(("v".to_string(), cell_south_address.clone()));
-                graph.get_mut(&cell_south_address).unwrap().push(("^".to_string(), cell_address.clone()));
-            }
+                    let from_end = cell_value - 1 == neighbour_value || cell_value <= neighbour_value;
+                    let from_start = cell_value + 1 == neighbour_value || cell_value >= neighbour_value;
 
-            if [cell_value + 1, cell_value, cell_value - 1].contains(&cell_east) {
-                let cell_address = i.to_string() + "," + &j.to_string();
-                let cell_east_address = i.to_string() + "," + &(j + 1).to_string();
-
-                graph.get_mut(&cell_address).unwrap().push((">".to_string(), cell_east_address.clone()));
-                graph.get_mut(&cell_east_address).unwrap().push(("<".to_string(), cell_address.clone()));
-            }
+                    if (is_from_end && from_end) || (!is_from_end && from_start) {
+                        let direction = match (i as i32 - *x as i32, j as i32 - *y as i32) {
+                            (1, 0) => "↑",
+                            (-1, 0) => "↓",
+                            (0, 1) => "←",
+                            (0, -1) => "→",
+                            _ => panic!("Invalid direction")
+                        };
+                        graph.get_mut(cell_address.as_str()).unwrap().push((direction.parse().unwrap(), neighbour_address));
+                    }
+                }
+            });
         }
     }
 
@@ -121,5 +160,22 @@ fn replace_char(char: char) -> char {
         'S' => 'a',
         'E' => 'z',
         _ => char
+    }
+}
+
+fn visualize_maze(maze: Vec<Vec<char>>, path: Vec<(String, String)>) {
+    let mut maze = maze.clone().into_iter()
+        .map(|row| row.into_iter().map(|cell| if ['S', 'E'].contains(&cell) { cell } else { ' ' }).collect::<Vec<char>>())
+        .collect::<Vec<Vec<char>>>();
+
+    for (direction, cell) in path {
+        let coords: Vec<&str> = cell.split(",").collect();
+        let x = coords[0].parse::<usize>().unwrap();
+        let y = coords[1].parse::<usize>().unwrap();
+        maze[x][y] = direction.chars().next().unwrap();
+    }
+
+    for row in maze {
+        println!("{:?}", row);
     }
 }

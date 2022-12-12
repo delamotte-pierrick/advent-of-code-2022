@@ -42,7 +42,8 @@ fn main() {
     day_10::day_10_2();
     day_11::day_11_1();
     // day_11::day_11_2(); // This day takes a while to run
-    day_12::day_12_1();
+    // day_12::day_12_1();
+    day_12::day_12_2();
 
     times.push(now.elapsed());
 
