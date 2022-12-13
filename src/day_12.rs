@@ -5,7 +5,7 @@ use crate::utils::read_lines;
 pub(crate) fn day_12_1() {
     let (maze, start, end) = parse_input("./data/input_12.txt", 'S', 'E');
 
-    if start.is_none() || end.len() > 0 {
+    if start.is_none() || end.len() == 0 {
         panic!("No start or end found");
     }
 

@@ -8,5 +8,6 @@ edition = "2021"
 [dependencies]
 array_tool = "1.0.3"
 evalexpr = "8.1.0"
+json = "0.12.4"
 range-ext = "0.1.3"
 regex = "1.7.0"
