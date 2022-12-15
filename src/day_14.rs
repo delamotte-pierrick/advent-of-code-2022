@@ -49,7 +49,7 @@ fn generate_grid(filename: &str, sand_start_point: (usize, usize), part_2: bool)
         let ymin = 0;
         let ymax = coordinates.iter().map(|c| c.iter().map(|c| c.1).max().unwrap()).max().unwrap();
 
-        let mut grid: Vec<Vec<char>> = vec![vec!['.'; (xmax - xmin + 1 + xoffset * 2)]; (ymax - ymin + 1 + yoffset)];
+        let mut grid: Vec<Vec<char>> = vec![vec!['.'; xmax - xmin + 1 + xoffset * 2]; ymax - ymin + 1 + yoffset];
 
         coordinates.iter().for_each(|coordinate_group| {
             (0..coordinate_group.len() - 1).for_each(|c| {
